@@ -87,7 +87,7 @@ class AbstractChosen
     option_el.className = classes.join(" ")
     option_el.style.cssText = option.style
     option_el.setAttribute("data-option-array-index", option.array_index)
-    option_el.innerHTML = option.search_text
+    option_el.innerHTML = if this.options.template then this.options.template(option.text, option.template_data) else option.html
 
     this.outerHTML(option_el)
 
@@ -161,6 +161,7 @@ class AbstractChosen
             if searchText.length
               startpos = option.search_text.search zregex
               text = option.search_text.substr(0, startpos + searchText.length) + '</em>' + option.search_text.substr(startpos + searchText.length)
+              text = if this.options.template then this.options.template(text, option.template_data) else text
               option.search_text = text.substr(0, startpos) + '<em>' + text.substr(startpos)
 
             results_group.group_match = true if results_group?

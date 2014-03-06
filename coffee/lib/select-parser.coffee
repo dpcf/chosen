@@ -10,6 +10,21 @@ class SelectParser
     else
       this.add_option child
 
+  get_template_data: (option) ->
+    template_data = {}
+
+    for k, v of option.attributes
+      if typeof(v.nodeName) == "string"
+        attribute_name = v.nodeName.split("-")
+
+        if attribute_name[0] == "data" and attribute_name = attribute_name[1..]
+          for word, i in attribute_name
+            attribute_name[i] = word.charAt(0).toUpperCase() + word.slice(1) if i != 0
+
+          template_data[attribute_name.join("")] = v.nodeValue
+
+    template_data
+
   add_group: (group) ->
     group_position = @parsed.length
     @parsed.push
@@ -36,6 +51,7 @@ class SelectParser
           group_array_index: group_position
           classes: option.className
           style: option.style.cssText
+          template_data: @get_template_data(option)
       else
         @parsed.push
           array_index: @parsed.length
